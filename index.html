@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur de Notes - 4ème Pharmacie</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --secondary: #4caf50;
+            --accent: #8bc34a;
+            --light: #e8f5e9;
+            --dark: #1b5e20;
+            --success: #388e3c;
+            --warning: #f57c00;
+            --text: #333333;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.1;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light);
+            display: flex;
+            align-items: center;
+        }
+        
+        .card h2::before {
+            content: "•";
+            color: var(--secondary);
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .input-field {
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .input-field label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .input-field input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background-color: #f9f9f9;
+        }
+        
+        .input-field input:focus {
+            border-color: var(--secondary);
+            outline: none;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 6px rgba(46, 125, 50, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(to right, #1b5e20, #388e3c);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(46, 125, 50, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(to right, #388e3c, #4caf50);
+            color: white;
+            box-shadow: 0 4px 6px rgba(56, 142, 60, 0.3);
+        }
+        
+        .btn-success:hover {
+            background: linear-gradient(to right, #2e7d32, #43a047);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(56, 142, 60, 0.4);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(to right, #f57c00, #ff9800);
+            color: white;
+            box-shadow: 0 4px 6px rgba(245, 124, 0, 0.3);
+        }
+        
+        .btn-warning:hover {
+            background: linear-gradient(to right, #e65100, #f57c00);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(245, 124, 0, 0.4);
+        }
+        
+        .result-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            display: none;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .result-container.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .result-header h2 {
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .result-header h2::before {
+            content: "📊";
+            margin-right: 10px;
+        }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .result-item {
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s;
+            border: 1px solid #c8e6c9;
+        }
+        
+        .result-item:hover {
+            transform: scale(1.03);
+        }
+        
+        .result-item h3 {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+        
+        .result-item p {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .final-result {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 1rem;
+            box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
+        }
+        
+        .final-result h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .final-result p {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        
+        .info-box {
+            background-color: #e8f5e9;
+            border-left: 4px solid var(--secondary);
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .info-box p {
+            margin-bottom: 0.5rem;
+        }
+        
+        .info-box p:last-child {
+            margin-bottom: 0;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1.5rem;
+            color: var(--dark);
+            border-top: 1px solid #c8e6c9;
+        }
+        
+        @media (max-width: 768px) {
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .input-field {
+                width: 100%;
+            }
+            
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Calculateur de Notes - 4ème Pharmacie</h1>
+            <p>Calculez votre moyenne générale pour le semestre</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="info-box">
+            <p><strong>Comment calculer votre moyenne :</strong></p>
+            <p>Pour chaque module avec TD : ((EMD1 + EMD2 + EMD3)/3 + (TD + TP)/2) / 2</p>
+            <p>Pour Biochimie clinique (sans TD) : ((EMD1 + EMD2 + EMD3)/3 + TP) / 2</p>
+            <p>La moyenne générale = (Σ(Note du module × 2)) / 10</p>
+        </div>
+        
+        <div class="card">
+            <h2>Hémobiologie</h2>
+            <div class="input-group">
+                <div class="input-field">
+                    <label for="hemo-emd1">EMD 1</label>
+                    <input type="number" id="hemo-emd1" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+                <div class="input-field">
+                    <label for="hemo-emd2">EMD 2</label>
+                    <input type="number" id="hemo-emd2" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+                <div class="input-field">
+                    <label for="hemo-emd3">EMD 3</label>
+                    <input type="number" id="hemo-emd3" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+                <div class="input-field">
+                    <label for="hemo-td">TD</label>
+                    <input type="number" id="hemo-td" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+                <div class="input-field">
+                    <label for="hemo-tp">TP</label>
+                    <input type="number" id="hemo-tp" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Microbiologie</h2>
+            <div class="input-group">
+                <div class="input-field">
+                    <label for="micro-emd1">EMD 1</label>
+                    <input type="number" id="micro-emd1" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+                <div class="input-field">
+                    <label for="micro-emd2">EMD 2</label>
+                    <input type="number" id="micro-emd2" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+                <div class="input-field">
+                    <label for="micro-emd3">EMD 3</label>
+                    <input type="number" id="micro-emd3" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+                <div class="input-field">
+                    <label for="micro-td">TD</label>
+                    <input type="number" id="micro-td" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+                <div class="input-field">
+                    <label for="micro-tp">TP</label>
+                    <input type="number" id="micro-tp" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Immunologie</h2>
+            <div class="input-group">
+                <div class="input-field">
+                    <label for="immuno-emd1">EMD 1</label>
+                    <input type="number" id="immuno-emd1" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+                <div class="input-field">
+                    <label for="immuno-emd2">EMD 2</label>
+                    <input type="number" id="immuno-emd2" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+                <div class="input-field">
+                    <label for="immuno-emd3">EMD 3</label>
+                    <input type="number" id="immuno-emd3" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+                <div class="input-field">
+                    <label for="immuno-td">TD</label>
+                    <input type="number" id="immuno-td" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+                <div class="input-field">
+                    <label for="immuno-tp">TP</label>
+                    <input type="number" id="immuno-tp" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Parasitologie</h2>
+            <div class="input-group">
+                <div class="input-field">
+                    <label for="parasito-emd1">EMD 1</label>
+                    <input type="number" id="parasito-emd1" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+                <div class="input-field">
+                    <label for="parasito-emd2">EMD 2</label>
+                    <input type="number" id="parasito-emd2" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+                <div class="input-field">
+                    <label for="parasito-emd3">EMD 3</label>
+                    <input type="number" id="parasito-emd3" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+                <div class="input-field">
+                    <label for="parasito-td">TD</label>
+                    <input type="number" id="parasito-td" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+                <div class="input-field">
+                    <label for="parasito-tp">TP</label>
+                    <input type="number" id="parasito-tp" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Biochimie Clinique</h2>
+            <div class="input-group">
+                <div class="input-field">
+                    <label for="biochimie-emd1">EMD 1</label>
+                    <input type="number" id="biochimie-emd1" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+                <div class="input-field">
+                    <label for="biochimie-emd2">EMD 2</label>
+                    <input type="number" id="biochimie-emd2" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+                <div class="input-field">
+                    <label for="biochimie-emd3">EMD 3</label>
+                    <input type="number" id="biochimie-emd3" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+                <div class="input-field">
+                    <label for="biochimie-tp">TP</label>
+                    <input type="number" id="biochimie-tp" min="0" max="20" step="0.01" placeholder="0-20">
+                </div>
+            </div>
+        </div>
+        
+        <div class="buttons">
+            <button class="btn-primary" id="calculate-btn">
+                <span>📊</span> Calculer la Moyenne
+            </button>
+            <button class="btn-success" id="download-btn" style="display:none;">
+                <span>📥</span> Télécharger en PDF
+            </button>
+            <button class="btn-warning" id="reset-btn">
+                <span>🔄</span> Réinitialiser
+            </button>
+        </div>
+        
+        <div class="result-container" id="result-container">
+            <div class="result-header">
+                <h2>Résultats du Calcul</h2>
+            </div>
+            
+            <div class="result-grid">
+                <div class="result-item">
+                    <h3>Hémobiologie</h3>
+                    <p id="result-hemo">-</p>
+                </div>
+                <div class="result-item">
+                    <h3>Microbiologie</h3>
+                    <p id="result-micro">-</p>
+                </div>
+                <div class="result-item">
+                    <h3>Immunologie</h3>
+                    <p id="result-immuno">-</p>
+                </div>
+                <div class="result-item">
+                    <h3>Parasitologie</h3>
+                    <p id="result-parasito">-</p>
+                </div>
+                <div class="result-item">
+                    <h3>Biochimie Clinique</h3>
+                    <p id="result-biochimie">-</p>
+                </div>
+            </div>
+            
+            <div class="final-result">
+                <h3>Moyenne Générale</h3>
+                <p id="final-result">-</p>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Calculateur de Notes - 4ème Pharmacie &copy; 2023</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calculateBtn = document.getElementById('calculate-btn');
+            const downloadBtn = document.getElementById('download-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const resultContainer = document.getElementById('result-container');
+            
+            calculateBtn.addEventListener('click', calculateResults);
+            downloadBtn.addEventListener('click', downloadPDF);
+            resetBtn.addEventListener('click', resetForm);
+            
+            function calculateResults() {
+                // Get all input values
+                const hemoEMD1 = parseFloat(document.getElementById('hemo-emd1').value) || 0;
+                const hemoEMD2 = parseFloat(document.getElementById('hemo-emd2').value) || 0;
+                const hemoEMD3 = parseFloat(document.getElementById('hemo-emd3').value) || 0;
+                const hemoTD = parseFloat(document.getElementById('hemo-td').value) || 0;
+                const hemoTP = parseFloat(document.getElementById('hemo-tp').value) || 0;
+                
+                const microEMD1 = parseFloat(document.getElementById('micro-emd1').value) || 0;
+                const microEMD2 = parseFloat(document.getElementById('micro-emd2').value) || 0;
+                const microEMD3 = parseFloat(document.getElementById('micro-emd3').value) || 0;
+                const microTD = parseFloat(document.getElementById('micro-td').value) || 0;
+                const microTP = parseFloat(document.getElementById('micro-tp').value) || 0;
+                
+                const immunoEMD1 = parseFloat(document.getElementById('immuno-emd1').value) || 0;
+                const immunoEMD2 = parseFloat(document.getElementById('immuno-emd2').value) || 0;
+                const immunoEMD3 = parseFloat(document.getElementById('immuno-emd3').value) || 0;
+                const immunoTD = parseFloat(document.getElementById('immuno-td').value) || 0;
+                const immunoTP = parseFloat(document.getElementById('immuno-tp').value) || 0;
+                
+                const parasitoEMD1 = parseFloat(document.getElementById('parasito-emd1').value) || 0;
+                const parasitoEMD2 = parseFloat(document.getElementById('parasito-emd2').value) || 0;
+                const parasitoEMD3 = parseFloat(document.getElementById('parasito-emd3').value) || 0;
+                const parasitoTD = parseFloat(document.getElementById('parasito-td').value) || 0;
+                const parasitoTP = parseFloat(document.getElementById('parasito-tp').value) || 0;
+                
+                const biochimieEMD1 = parseFloat(document.getElementById('biochimie-emd1').value) || 0;
+                const biochimieEMD2 = parseFloat(document.getElementById('biochimie-emd2').value) || 0;
+                const biochimieEMD3 = parseFloat(document.getElementById('biochimie-emd3').value) || 0;
+                const biochimieTP = parseFloat(document.getElementById('biochimie-tp').value) || 0;
+                
+                // Calculate module averages
+                const hemoAvg = calculateModuleWithTD(hemoEMD1, hemoEMD2, hemoEMD3, hemoTD, hemoTP);
+                const microAvg = calculateModuleWithTD(microEMD1, microEMD2, microEMD3, microTD, microTP);
+                const immunoAvg = calculateModuleWithTD(immunoEMD1, immunoEMD2, immunoEMD3, immunoTD, immunoTP);
+                const parasitoAvg = calculateModuleWithTD(parasitoEMD1, parasitoEMD2, parasitoEMD3, parasitoTD, parasitoTP);
+                const biochimieAvg = calculateModuleWithoutTD(biochimieEMD1, biochimieEMD2, biochimieEMD3, biochimieTP);
+                
+                // Calculate final average
+                const total = (hemoAvg * 2) + (microAvg * 2) + (immunoAvg * 2) + (parasitoAvg * 2) + (biochimieAvg * 2);
+                const finalAvg = total / 10;
+                
+                // Display results
+                document.getElementById('result-hemo').textContent = hemoAvg.toFixed(2);
+                document.getElementById('result-micro').textContent = microAvg.toFixed(2);
+                document.getElementById('result-immuno').textContent = immunoAvg.toFixed(2);
+                document.getElementById('result-parasito').textContent = parasitoAvg.toFixed(2);
+                document.getElementById('result-biochimie').textContent = biochimieAvg.toFixed(2);
+                document.getElementById('final-result').textContent = finalAvg.toFixed(2);
+                
+                // Show results and download button
+                resultContainer.classList.add('show');
+                downloadBtn.style.display = 'flex';
+                
+                // Scroll to results
+                resultContainer.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            function calculateModuleWithTD(emd1, emd2, emd3, td, tp) {
+                const emdAvg = (emd1 + emd2 + emd3) / 3;
+                const tdTpAvg = (td + tp) / 2;
+                return (emdAvg + tdTpAvg) / 2;
+            }
+            
+            function calculateModuleWithoutTD(emd1, emd2, emd3, tp) {
+                const emdAvg = (emd1 + emd2 + emd3) / 3;
+                return (emdAvg + tp) / 2;
+            }
+            
+            function downloadPDF() {
+                const element = document.getElementById('result-container');
+                const opt = {
+                    margin: 1,
+                    filename: 'resultats_4eme_pharmacie.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'cm', format: 'a4', orientation: 'portrait' }
+                };
+                
+                html2pdf().set(opt).from(element).save();
+            }
+            
+            function resetForm() {
+                // Clear all input fields
+                const inputs = document.querySelectorAll('input');
+                inputs.forEach(input => {
+                    input.value = '';
+                });
+                
+                // Hide results
+                resultContainer.classList.remove('show');
+                downloadBtn.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
