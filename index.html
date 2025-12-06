@@ -7,14 +7,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
-            --primary: #2e7d32;
-            --secondary: #4caf50;
-            --accent: #8bc34a;
-            --light: #e8f5e9;
-            --dark: #1b5e20;
-            --success: #388e3c;
+            --primary-blue: #1a73e8;
+            --light-blue: #e8f0fe;
+            --dark-blue: #0d47a1;
+            --text-dark: #202124;
+            --text-light: #5f6368;
+            --white: #ffffff;
+            --light-gray: #f8f9fa;
+            --border-gray: #dadce0;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --success: #34a853;
             --warning: #f57c00;
-            --text: #333333;
         }
         
         * {
@@ -25,8 +28,8 @@
         }
         
         body {
-            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-            color: var(--text);
+            background: linear-gradient(135deg, var(--light-gray) 0%, var(--white) 100%);
+            color: var(--text-dark);
             line-height: 1.6;
             min-height: 100vh;
         }
@@ -38,12 +41,12 @@
         }
         
         header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
             color: white;
             padding: 2rem 0;
             text-align: center;
             border-radius: 0 0 15px 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow);
             margin-bottom: 2rem;
             position: relative;
             overflow: hidden;
@@ -73,13 +76,13 @@
         }
         
         .card {
-            background: white;
+            background: var(--white);
             border-radius: 12px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            box-shadow: var(--shadow);
             padding: 1.5rem;
             margin-bottom: 1.5rem;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border-left: 4px solid var(--secondary);
+            border-left: 4px solid var(--primary-blue);
         }
         
         .card:hover {
@@ -88,17 +91,17 @@
         }
         
         .card h2 {
-            color: var(--primary);
+            color: var(--dark-blue);
             margin-bottom: 1rem;
             padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--light);
+            border-bottom: 2px solid var(--light-blue);
             display: flex;
             align-items: center;
         }
         
         .card h2::before {
             content: "•";
-            color: var(--secondary);
+            color: var(--primary-blue);
             margin-right: 10px;
             font-size: 1.5rem;
         }
@@ -119,24 +122,24 @@
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
-            color: var(--dark);
+            color: var(--dark-blue);
         }
         
         .input-field input {
             width: 100%;
             padding: 0.75rem;
-            border: 2px solid #e1e5eb;
+            border: 2px solid var(--border-gray);
             border-radius: 8px;
             font-size: 1rem;
             transition: all 0.3s;
-            background-color: #f9f9f9;
+            background-color: var(--light-gray);
         }
         
         .input-field input:focus {
-            border-color: var(--secondary);
+            border-color: var(--primary-blue);
             outline: none;
-            background-color: white;
-            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+            background-color: var(--white);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
         }
         
         .buttons {
@@ -163,49 +166,49 @@
         }
         
         .btn-primary {
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: white;
-            box-shadow: 0 4px 6px rgba(46, 125, 50, 0.3);
+            background: linear-gradient(to right, var(--primary-blue), #4285f4);
+            color: var(--white);
+            box-shadow: 0 4px 6px rgba(26, 115, 232, 0.3);
         }
         
         .btn-primary:hover {
-            background: linear-gradient(to right, #1b5e20, #388e3c);
+            background: linear-gradient(to right, var(--dark-blue), var(--primary-blue));
             transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(46, 125, 50, 0.4);
+            box-shadow: 0 6px 8px rgba(26, 115, 232, 0.4);
         }
         
         .btn-success {
-            background: linear-gradient(to right, #388e3c, #4caf50);
-            color: white;
-            box-shadow: 0 4px 6px rgba(56, 142, 60, 0.3);
+            background: linear-gradient(to right, var(--success), #4caf50);
+            color: var(--white);
+            box-shadow: 0 4px 6px rgba(52, 168, 83, 0.3);
         }
         
         .btn-success:hover {
-            background: linear-gradient(to right, #2e7d32, #43a047);
+            background: linear-gradient(to right, #2e7d32, var(--success));
             transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(56, 142, 60, 0.4);
+            box-shadow: 0 6px 8px rgba(52, 168, 83, 0.4);
         }
         
         .btn-warning {
-            background: linear-gradient(to right, #f57c00, #ff9800);
-            color: white;
+            background: linear-gradient(to right, var(--warning), #ff9800);
+            color: var(--white);
             box-shadow: 0 4px 6px rgba(245, 124, 0, 0.3);
         }
         
         .btn-warning:hover {
-            background: linear-gradient(to right, #e65100, #f57c00);
+            background: linear-gradient(to right, #e65100, var(--warning));
             transform: translateY(-2px);
             box-shadow: 0 6px 8px rgba(245, 124, 0, 0.4);
         }
         
         .result-container {
-            background: white;
+            background: var(--white);
             border-radius: 12px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            box-shadow: var(--shadow);
             padding: 1.5rem;
             margin-top: 2rem;
             display: none;
-            border-left: 4px solid var(--accent);
+            border-left: 4px solid var(--primary-blue);
         }
         
         .result-container.show {
@@ -226,7 +229,7 @@
         }
         
         .result-header h2 {
-            color: var(--primary);
+            color: var(--dark-blue);
             display: flex;
             align-items: center;
         }
@@ -244,12 +247,12 @@
         }
         
         .result-item {
-            background: var(--light);
+            background: var(--light-blue);
             padding: 1rem;
             border-radius: 8px;
             text-align: center;
             transition: transform 0.3s;
-            border: 1px solid #c8e6c9;
+            border: 1px solid var(--border-gray);
         }
         
         .result-item:hover {
@@ -259,23 +262,23 @@
         .result-item h3 {
             font-size: 0.9rem;
             margin-bottom: 0.5rem;
-            color: var(--dark);
+            color: var(--dark-blue);
         }
         
         .result-item p {
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--primary);
+            color: var(--primary-blue);
         }
         
         .final-result {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            color: var(--white);
             padding: 1.5rem;
             border-radius: 12px;
             text-align: center;
             margin-top: 1rem;
-            box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
+            box-shadow: 0 4px 10px rgba(26, 115, 232, 0.3);
         }
         
         .final-result h3 {
@@ -289,8 +292,8 @@
         }
         
         .info-box {
-            background-color: #e8f5e9;
-            border-left: 4px solid var(--secondary);
+            background-color: var(--light-blue);
+            border-left: 4px solid var(--primary-blue);
             padding: 1.2rem;
             margin-bottom: 1.5rem;
             border-radius: 0 8px 8px 0;
@@ -309,8 +312,8 @@
             text-align: center;
             margin-top: 3rem;
             padding: 1.5rem;
-            color: var(--dark);
-            border-top: 1px solid #c8e6c9;
+            color: var(--text-dark);
+            border-top: 1px solid var(--border-gray);
         }
         
         @media (max-width: 768px) {
@@ -351,9 +354,10 @@
     <div class="container">
         <div class="info-box">
             <p><strong>Comment calculer votre moyenne :</strong></p>
-            <p>Pour chaque module avec TD : ((EMD1 + EMD2 + EMD3)/3 + (TD + TP)/2) / 2</p>
-            <p>Pour Biochimie clinique (sans TD) : ((EMD1 + EMD2 + EMD3)/3 + TP) / 2</p>
-            <p>La moyenne générale = (Σ(Note du module × 2)) / 10</p>
+            <p>Pour chaque module avec TD : ((EMD1 + EMD2 + EMD3) + (TD + TP)/2) / 4</p>
+            <p>Pour Biochimie clinique (sans TD) : (EMD1 + EMD2 + EMD3 + TP) / 4</p>
+            <p>Multiplier chaque note de module par 2</p>
+            <p>La moyenne générale = Σ(Note du module × 2) / 10</p>
         </div>
         
         <div class="card">
@@ -577,15 +581,16 @@
                 const biochimieEMD3 = parseFloat(document.getElementById('biochimie-emd3').value) || 0;
                 const biochimieTP = parseFloat(document.getElementById('biochimie-tp').value) || 0;
                 
-                // Calculate module averages
+                // Calculate module averages using new formulas
                 const hemoAvg = calculateModuleWithTD(hemoEMD1, hemoEMD2, hemoEMD3, hemoTD, hemoTP);
                 const microAvg = calculateModuleWithTD(microEMD1, microEMD2, microEMD3, microTD, microTP);
                 const immunoAvg = calculateModuleWithTD(immunoEMD1, immunoEMD2, immunoEMD3, immunoTD, immunoTP);
                 const parasitoAvg = calculateModuleWithTD(parasitoEMD1, parasitoEMD2, parasitoEMD3, parasitoTD, parasitoTP);
                 const biochimieAvg = calculateModuleWithoutTD(biochimieEMD1, biochimieEMD2, biochimieEMD3, biochimieTP);
                 
-                // Calculate final average
-                const total = (hemoAvg * 2) + (microAvg * 2) + (immunoAvg * 2) + (parasitoAvg * 2) + (biochimieAvg * 2);
+                // Multiply each subject's degree by 2 and calculate sum
+                const total = (hemoAvg * 2) + (microAvg * 2) + (immunoAvg * 2) + 
+                             (parasitoAvg * 2) + (biochimieAvg * 2);
                 const finalAvg = total / 10;
                 
                 // Display results
@@ -605,14 +610,15 @@
             }
             
             function calculateModuleWithTD(emd1, emd2, emd3, td, tp) {
-                const emdAvg = (emd1 + emd2 + emd3) / 3;
-                const tdTpAvg = (td + tp) / 2;
-                return (emdAvg + tdTpAvg) / 2;
+                // ((EMD 1 + EMD 2 + EMD 3) + (TP+TD)/2) / 4
+                const emdSum = emd1 + emd2 + emd3;
+                const tpTdAvg = (tp + td) / 2;
+                return (emdSum + tpTdAvg) / 4;
             }
             
             function calculateModuleWithoutTD(emd1, emd2, emd3, tp) {
-                const emdAvg = (emd1 + emd2 + emd3) / 3;
-                return (emdAvg + tp) / 2;
+                // (EMD 1 + EMD 2 + EMD 3 + TP) / 4
+                return (emd1 + emd2 + emd3 + tp) / 4;
             }
             
             function downloadPDF() {
