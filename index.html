@@ -315,6 +315,28 @@
             color: var(--text-dark);
             border-top: 1px solid var(--border-gray);
         }
+
+        /* PDF-specific styles that will be used when generating PDF */
+        @media print {
+            .result-container {
+                display: block !important;
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+            
+            .btn-primary, .btn-success, .btn-warning, .buttons {
+                display: none !important;
+            }
+            
+            .card, .info-box, header, footer {
+                display: none !important;
+            }
+            
+            body {
+                background: white !important;
+                color: black !important;
+            }
+        }
         
         @media (max-width: 768px) {
             .input-group {
@@ -622,16 +644,69 @@
             }
             
             function downloadPDF() {
-                const element = document.getElementById('result-container');
+                // Make sure the results are visible before generating PDF
+                if (!resultContainer.classList.contains('show')) {
+                    alert('Veuillez d\'abord calculer les résultats avant de télécharger le PDF.');
+                    return;
+                }
+                
+                // Create a clone of the result container for PDF generation
+                const element = resultContainer.cloneNode(true);
+                
+                // Add date and title for the PDF
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('fr-FR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                const title = document.createElement('div');
+                title.innerHTML = `
+                    <h1 style="color: var(--dark-blue); text-align: center; margin-bottom: 10px;">
+                        Calculateur de Notes - 4ème Pharmacie
+                    </h1>
+                    <p style="text-align: center; color: var(--text-light); margin-bottom: 20px;">
+                        Généré le ${dateStr}
+                    </p>
+                `;
+                
+                // Insert title at the beginning
+                element.insertBefore(title, element.firstChild);
+                
+                // Add some spacing
+                element.style.padding = '30px';
+                
+                // Create a temporary container for PDF generation
+                const tempContainer = document.createElement('div');
+                tempContainer.style.position = 'fixed';
+                tempContainer.style.left = '-9999px';
+                tempContainer.appendChild(element);
+                document.body.appendChild(tempContainer);
+                
                 const opt = {
                     margin: 1,
                     filename: 'resultats_4eme_pharmacie.pdf',
                     image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { scale: 2 },
-                    jsPDF: { unit: 'cm', format: 'a4', orientation: 'portrait' }
+                    html2canvas: { 
+                        scale: 2,
+                        useCORS: true,
+                        logging: false
+                    },
+                    jsPDF: { 
+                        unit: 'cm', 
+                        format: 'a4', 
+                        orientation: 'portrait' 
+                    }
                 };
                 
-                html2pdf().set(opt).from(element).save();
+                // Generate PDF
+                html2pdf().set(opt).from(element).save().then(() => {
+                    // Clean up the temporary container
+                    document.body.removeChild(tempContainer);
+                });
             }
             
             function resetForm() {
@@ -644,6 +719,14 @@
                 // Hide results
                 resultContainer.classList.remove('show');
                 downloadBtn.style.display = 'none';
+                
+                // Reset result displays
+                document.getElementById('result-hemo').textContent = '-';
+                document.getElementById('result-micro').textContent = '-';
+                document.getElementById('result-immuno').textContent = '-';
+                document.getElementById('result-parasito').textContent = '-';
+                document.getElementById('result-biochimie').textContent = '-';
+                document.getElementById('final-result').textContent = '-';
             }
         });
     </script>
